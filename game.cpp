@@ -1,6 +1,18 @@
 #include <iostream>
 #include <random>
 #include <fstream>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+
+// Scoreboard structure
+struct Score{
+    std::string playerName;
+    int tries;
+    int difficulty;
+};
+
+void scoreboardTop5(){};
 
 // Main menu screen
 int startScreen(){
@@ -24,18 +36,42 @@ if(menuSelect == 1){
     std::cin >> difficulty;
     std::cout << "------\n";
 }
-// Show scoreboard
+// Show scoreboard by difficulty
 else if(menuSelect == 2){
-    // showScoreboard();
-    if(score.is_open()){
-        while(getline(score, line)){
-            std::cout << line << std::endl;
+    int diffSelect;
+    std::cout << "Select difficulty to see top scores:\n1) Easy\n2) Medium\n3) Hard\nYour choice: ";
+    std::cin >> diffSelect;
+
+    if(diffSelect < 1 || diffSelect >3){
+        std::cout << "Difficulty not available";
+        return 0;
+    }
+    if(!score.is_open()){
+        std::cout << "Scoreboard is not available";
+        return 0;
+    }
+    // Start of code responsible for working scoreboard
+    std::vector<Score> scores;
+    int scoreboardTries, scoreboardDifficulty;
+
+    while(score >> playerName >> scoreboardTries >> scoreboardDifficulty){
+        if(scoreboardDifficulty == diffSelect){
+            scores.push_back({playerName, scoreboardTries, scoreboardDifficulty});
         }
     }
-    else{
-        std::cout << "Scoreboard is not available";
-    }
     score.close();
+
+    // Sorting from lowerst score to highest
+    std::sort(scores.begin(), scores.end(), [](const Score &a, const Score &b){
+        return a.tries < b.tries;
+    });
+
+    // Disyplaying top 5 scores
+    std::cout << "Top 5 scores for selected difficulty:\n";
+    for(int i = 0; i < scores.size() && i < 5; i++){
+        std::cout << i+1 << ". " << scores[i].playerName << " - " << scores[i].tries << " tries\n";
+    }
+
     return 0;
 }
 else{
