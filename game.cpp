@@ -13,6 +13,17 @@ struct Score{
     int difficulty;
 };
 
+// Random message pool
+std::vector<std::string> randMessPool = {
+    "Oops!",
+    "Almost!",
+    "Wrong!",
+    "Yikes!",
+    "Nah-uhh!",
+    "Snap!",
+    "Ah man!"
+};
+
 void pause(){
     std::cout << "\nPress ENTER to continue...";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -31,7 +42,7 @@ int main() {
     while(true){
         // Main menu screen
         int menuSelect = startScreen();
-        int difficulty, randomNum, maxNum, tries = 0, answer;
+        int difficulty, randomNum, maxNum, tries = 0, answer, randMess;
         std::fstream score("scoreboard.txt");
         std::string playerName;
         std::string line;
@@ -140,12 +151,16 @@ int main() {
             }
             // Number too small
             else if(answer < randomNum){
-                std::cout << "Opps, looks like your answer is smaller that a hidden number. Try again!\n";
+                randMess = rand() % randMessPool.size();
+                std::cout << randMessPool[randMess] << " ";
+                std::cout << "Looks like your answer is smaller that a hidden number. Try again!\n";
                 std::cout << "It's your " << tries+1 << " try\n";
             }
             // Number too big
             else if(answer > randomNum){
-                std::cout << "Opps, looks like your answer is bigger that a hidden number. Try again!\n";
+                randMess = rand() % randMessPool.size();
+                std::cout << randMessPool[randMess] << " ";
+                std::cout << "OLooks like your answer is bigger that a hidden number. Try again!\n";
                 std::cout << "It's your " << tries+1 << " try\n";
             }
         }
