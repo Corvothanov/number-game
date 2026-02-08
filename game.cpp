@@ -165,6 +165,8 @@ int main() {
 
         // Main gameplay core
         while(answer != randomNum){
+            std::cout << "Random number is: " << randomNum << "\n"; // Only in dev branch
+
             std::cout << "Successfully selected random number, try to guess it!\n Your guess: ";
             std::cin >> answer;
             tries++;
