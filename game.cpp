@@ -5,12 +5,18 @@
 #include <sstream>
 #include <algorithm>
 #include <cstdlib>
+#include <windows.h>
 
 // Scoreboard structure
 struct Score{
     std::string playerName;
     int tries;
     int difficulty;
+};
+
+// Function for setting the color of text in conosle
+void setColor(int color){
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 };
 
 // Random message pool
@@ -25,14 +31,22 @@ std::vector<std::string> randMessPool = {
 };
 
 void pause(){
-    std::cout << "\nPress ENTER to continue...";
+    std::cout << "\nPress ";
+    setColor(6);
+    std::cout << "ENTER ";
+    setColor(15);
+    std::cout << "to continue...";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
 }
 // Main menu screen
 int startScreen(){
     int menuSelect;
-    std::cout << "Welcome to the 'Guess The Number' game!\nPlease select available options\n 1) Start the game\n 2) Check scoreboard\n";
+    std::cout << "----------\nWelcome to the ";
+    setColor(6);
+    std::cout << "'Lucky Bet'" ;
+    setColor(15);
+    std::cout << " game!\nPlease select menu from available options\n 1) Start the game\n 2) Check scoreboard\n----------\n";
     std::cin >> menuSelect;
 
     return menuSelect;
@@ -50,16 +64,31 @@ int main() {
         // Difficulty screen
         if(menuSelect == 1){
             system("cls");
-            std::cout << "Before you start select your difficulty level \n Available difficulties:\n 1) Easy - numbers from 1 to 50)\n 2) Medium - numbers from 1 to 100\n 3) Hard - numbers from 1 to 250\n Selected diffuculty: ";
+            std::cout << "----------\nBefore you start select your difficulty level\nAvailable difficulties:\n ";
+            setColor(2);
+            std::cout << "1) Easy - numbers from 1 to 50\n ";
+            setColor(6);
+            std::cout <<"2) Medium - numbers from 1 to 100\n ";
+            setColor(12);
+            std::cout << "3) Hard - numbers from 1 to 250\n";
+            setColor(15);
+            std::cout << "Selected difficulty: ";
             std::cin >> difficulty;
-            std::cout << "------\n";
             system("cls");
         }
         // Show scoreboard by difficulty
         else if(menuSelect == 2){
             system("cls");
             int diffSelect;
-            std::cout << "Select difficulty to see top scores:\n1) Easy\n2) Medium\n3) Hard\nYour choice: ";
+            std::cout << "Select difficulty to see top scores:\n ";
+            setColor(2);
+            std::cout << "1) Easy\n ";
+            setColor(6);
+            std::cout << "2) Medium\n ";
+            setColor(12);
+            std::cout << "3) Hard\n";
+            setColor(15);
+            std::cout <<"Your choice: ";
             std::cin >> diffSelect;
             system("cls");
 
@@ -92,7 +121,16 @@ int main() {
             // Disyplaying top 5 scores
             std::cout << "Top 5 scores for selected difficulty:\n";
             for(int i = 0; i < scores.size() && i < 5; i++){
-                std::cout << i+1 << ". " << scores[i].playerName << " - " << scores[i].tries << " tries\n";
+                std::cout << i+1 << ". ";
+                setColor(6);
+                std::cout << scores[i].playerName;
+                setColor(15);
+                std::cout << " - ";
+                setColor(3);
+                std::cout << scores[i].tries;
+                setColor(15);
+                std::cout << " tries\n";
+                setColor(15);
             }
 
             pause();
@@ -100,7 +138,6 @@ int main() {
             continue;
         }
         else{
-            std::cout << "You selected wrong menu option! Try again!";
             system("cls");
             continue;
         }
@@ -126,21 +163,27 @@ int main() {
 
         randomNum = dist(gen);
 
-        std::cout << "Random number is: " << randomNum << "\n";
-
         // Main gameplay core
         while(answer != randomNum){
-            std::cout << "What is the random number?\n Your guess: ";
+            std::cout << "Successfully selected random number, try to guess it!\n Your guess: ";
             std::cin >> answer;
             tries++;
 
             // Right guess
             if(answer == randomNum){
-                std::cout << "That's right! Congratulations!\n";
-                std::cout << "You needed " << tries << " tries to guess the right number!\n Enter your name to save your score: ";
+                setColor(6);
+                std::cout << "Congratulations! You guessed right\n";
+                setColor(15);
+                std::cout << "You needed ";
+                setColor(3);
+                std::cout << tries;
+                setColor(15);
+                std::cout << " tries to guess the right number!\n Enter your name to save your score: ";
+                setColor(6);
 
                 // Writing score to file
                 std::cin >> playerName;
+                setColor(15);
                 
                 std::ofstream score("scoreboard.txt", std::ios::app);
                 score << playerName << " " << tries << " " << difficulty << std::endl;
@@ -153,14 +196,18 @@ int main() {
             else if(answer < randomNum){
                 randMess = rand() % randMessPool.size();
                 std::cout << randMessPool[randMess] << " ";
-                std::cout << "Looks like your answer is smaller that a hidden number. Try again!\n";
-                std::cout << "It's your " << tries+1 << " try\n";
+                std::cout << "Looks like your answer is smaller than a hidden number. Try again!\n";
+                std::cout << "It's your ";
+                setColor(3);
+                std::cout << tries+1;
+                setColor(15);
+                std::cout << " try\n";
             }
             // Number too big
             else if(answer > randomNum){
                 randMess = rand() % randMessPool.size();
                 std::cout << randMessPool[randMess] << " ";
-                std::cout << "OLooks like your answer is bigger that a hidden number. Try again!\n";
+                std::cout << "Looks like your answer is bigger than a hidden number. Try again!\n";
                 std::cout << "It's your " << tries+1 << " try\n";
             }
         }
