@@ -30,6 +30,14 @@ std::vector<std::string> randMessPool = {
     "Ah man!"
 };
 
+// Checks if scoreboard.txt if existing and isn't empty
+bool isScoreboardAvailable(){
+    std::fstream score("scoreboard.txt");
+    if(!score.is_open())
+        return false;
+    return score.peek() != std::fstream::traits_type::eof();
+}
+
 void pause(){
     std::cout << "\nPress ";
     setColor(6);
@@ -46,7 +54,9 @@ int startScreen(){
     setColor(6);
     std::cout << "'Lucky Bet'" ;
     setColor(15);
-    std::cout << " game!\nPlease select menu from available options\n 1) Start the game\n 2) Check scoreboard\n----------\n";
+    std::cout << " game!\nPlease select menu from available options\n 1) Start the game";
+    if(isScoreboardAvailable()) std::cout << "\n 2) Check scoreboard";
+    std::cout << "\n----------\n";
     std::cin >> menuSelect;
 
     return menuSelect;
@@ -56,7 +66,7 @@ int main() {
     while(true){
         // Main menu screen
         int menuSelect = startScreen();
-        int difficulty, randomNum, maxNum, tries = 0, answer, randMess;
+        int difficulty, randomNum, maxNum, tries = 0, answer = 0, randMess;
         std::fstream score("scoreboard.txt");
         std::string playerName;
         std::string line;
@@ -77,7 +87,7 @@ int main() {
             system("cls");
         }
         // Show scoreboard by difficulty
-        else if(menuSelect == 2){
+        else if(menuSelect == 2 && isScoreboardAvailable()){
             system("cls");
             int diffSelect;
             std::cout << "Select difficulty to see top scores:\n ";
@@ -97,12 +107,6 @@ int main() {
                 system("cls");
                 continue;
             }
-            if(!score.is_open()){
-                std::cout << "Scoreboard is not available";
-                system("cls");
-                continue;
-            }
-            // Start of code responsible for working scoreboard
             std::vector<Score> scores;
             int scoreboardTries, scoreboardDifficulty;
 
@@ -165,9 +169,14 @@ int main() {
 
         // Main gameplay core
         while(answer != randomNum){
-            std::cout << "Random number is: " << randomNum << "\n"; // Only in dev branch
-
-            std::cout << "Successfully selected random number, try to guess it!\n Your guess: ";
+            std::cout << "Random number is: " << randomNum << "\n";
+            std::cout << "Successfully selected random number, try to guess it!\n";
+            std::cout << "It's your ";
+            setColor(3);
+            std::cout << tries+1;
+            setColor(15);
+            std::cout << " try\n";
+            std::cout << "\nYour guess: ";
             std::cin >> answer;
             tries++;
 
@@ -180,7 +189,7 @@ int main() {
                 setColor(3);
                 std::cout << tries;
                 setColor(15);
-                std::cout << " tries to guess the right number!\n Enter your name to save your score: ";
+                std::cout << " tries to guess the right number!\n\nEnter your name to save your score: ";
                 setColor(6);
 
                 // Writing score to file
@@ -199,18 +208,12 @@ int main() {
                 randMess = rand() % randMessPool.size();
                 std::cout << randMessPool[randMess] << " ";
                 std::cout << "Looks like your answer is smaller than a hidden number. Try again!\n";
-                std::cout << "It's your ";
-                setColor(3);
-                std::cout << tries+1;
-                setColor(15);
-                std::cout << " try\n";
             }
             // Number too big
             else if(answer > randomNum){
                 randMess = rand() % randMessPool.size();
                 std::cout << randMessPool[randMess] << " ";
                 std::cout << "Looks like your answer is bigger than a hidden number. Try again!\n";
-                std::cout << "It's your " << tries+1 << " try\n";
             }
         }
         system("cls");
