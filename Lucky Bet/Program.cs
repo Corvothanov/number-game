@@ -8,6 +8,11 @@ static bool isScoreboardAvailable()
 {
     return File.Exists("scoreboard.txt");
 }
+static void pause()
+    {
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+    }
 static int startScreen() // method (Static) works only when called
 {
     Console.WriteLine("Welcome to the 'Lucky Bet' game!");
@@ -54,7 +59,7 @@ static string difficultySelect()
             }
         }
     }
-class Scores
+class Scores // Template
     {
         public string PlayerName;
         public int Tries;
@@ -62,26 +67,48 @@ class Scores
     }
 static void showScoreboard(int selectedDifficulty)
 {
-    var top5 = File.ReadAllLines("scoreboard.txt")
-        .Select(line => line.Split(';'))
-        .Select(parts => new Scores
+    var top5 = File.ReadAllLines("scoreboard.txt") // Reads a line and stores it as a table
+        .Select(line => line.Split(';')) // Splits a line into parts divided by ;
+        .Select(parts => new Scores // changes parts into Scores objects
         {
             PlayerName = parts[0],
             Tries = int.Parse(parts[1]),
             Difficulty = int.Parse(parts[2])
         })
-        .Where(s => s.Difficulty == selectedDifficulty)
-        .OrderBy(s => s.Tries)
-        .Take(5)
-        .ToList();
+        .Where(s => s.Difficulty == selectedDifficulty) // filters results by difficulty
+        .OrderBy(s => s.Tries) // sorts results by number of tries
+        .Take(5) // limits results
+        .ToList(); // changes table into list (vector in C++)
 
-    Console.WriteLine($"\n=== TOP 5 ===");
-
+    if(top5.Count == 0)
+            {
+                Console.WriteLine("No results");
+                pause();
+                Main();
+            }
+    Console.WriteLine($"=== TOP 5 ===");
     for (int i = 0; i < top5.Count; i++)
     {
         Console.WriteLine($"{i + 1}. {top5[i].PlayerName} - {top5[i].Tries}");
     }
+    pause();
+    Main();
 }
+static void randomFailMessage()
+    {
+        List<string> randomFailMessageList = new List<string>{
+            "Oops!",
+            "Almost!",
+            "Wrong!",
+            "Yikes!",
+            "Nah-uhh!",
+            "Snap!",
+            "Ah man!"
+        };
+        Random rand = new Random();
+        int randomFailMessage = rand.Next(0, randomFailMessageList.Count);
+        Console.WriteLine(randomFailMessageList[randomFailMessage]);
+    }
     static void Main()
     {
         // Console.WriteLine("Hello, World!");
@@ -100,7 +127,7 @@ static void showScoreboard(int selectedDifficulty)
                     Console.WriteLine("Exiting game");
                     break;
                 }
-                Console.WriteLine("Selected difficulty level: " + diffSelect);
+                // Console.WriteLine("Selected difficulty level: " + diffSelect);
                 if(diffSelect == "1")
                 {
                     maxNum = 50;
@@ -135,9 +162,11 @@ static void showScoreboard(int selectedDifficulty)
                     }
                     else if(answer < randomNum)
                     {
+                        randomFailMessage();
                         Console.WriteLine("Looks like your answer is smaller than a hidden number. Try again!");
                     }
                     else if(answer > randomNum){
+                        randomFailMessage();
                         Console.WriteLine("Looks like your answer is bigger than a hidden number. Try again!");
             }
                 }
