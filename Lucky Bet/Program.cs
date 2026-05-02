@@ -15,6 +15,7 @@ static void pause()
     }
 static int startScreen() // method (Static) works only when called
 {
+    Console.Clear();
     Console.WriteLine("Welcome to the 'Lucky Bet' game!");
     Console.WriteLine("Please select option from the menu");
     Console.WriteLine("1) Start new game");
@@ -30,6 +31,7 @@ static string difficultySelect()
     {
         while (true)
         {
+            Console.Clear();
             Console.WriteLine("Before you start select your difficulty level" + Environment.NewLine + "Available difficulties:");
             Console.WriteLine(" 1) Easy - numbers from 1 to 50 ");
             Console.WriteLine(" 2) Medium - numbers from 1 to 100 ");
@@ -37,6 +39,7 @@ static string difficultySelect()
             Console.WriteLine(" Or Q to quit the menu");
             Console.Write("Your choice: ");
             string diffSelect = Console.ReadLine();
+            Console.Clear();
             switch (diffSelect)
             {
                 default:
@@ -54,7 +57,9 @@ static string difficultySelect()
                     return diffSelect;
                 case "q":
                 case "Q":
-                    Console.WriteLine("Chosen exit");
+                    // Console.WriteLine("[DEV] Chosen exit");
+                    Console.Clear();
+                    Main();
                     return null;
             }
         }
@@ -109,10 +114,22 @@ static void randomFailMessage()
         int randomFailMessage = rand.Next(0, randomFailMessageList.Count);
         Console.WriteLine(randomFailMessageList[randomFailMessage]);
     }
+static bool isBetModeOn()
+    {
+        Console.WriteLine("Would you like to turn on a bet mode? If you chose YES you have to chose maximum number of available tries, if you pass that number you will fail (Y/N)");
+        while (true)
+        {
+            var key = Console.ReadKey(true).Key; // true hides key in console
+            if(key == ConsoleKey.Y)
+                return true;
+            if(key == ConsoleKey.N)
+                return false;
+        }
+    }
     static void Main()
     {
         // Console.WriteLine("Hello, World!");
-        int maxNum = 0, answer = 0, tries = 0;
+        int maxNum = 0, answer = 0, tries = 0, bet = 0;
         int menuSelect = startScreen();
         // Console.WriteLine("You have chosen option: " + menuSelect);
         switch (menuSelect)
@@ -140,18 +157,36 @@ static void randomFailMessage()
                 {
                     maxNum = 250;
                 }
+                bool betMode = isBetModeOn();
+                if (betMode)
+                {
+                    Console.WriteLine("[DEV] Bet mode is on");
+                    Console.WriteLine("Choose your maximum number of tries (from 1 to 10)");
+                    do
+                    {
+                        int.TryParse(Console.ReadLine(), out bet);
+                    }while(bet < 1 || bet > 10);
+                    Console.WriteLine($"[DEV] Bet number: {bet}");
+                }
                 Random rand = new Random();
                 int randomNum = rand.Next(1, maxNum + 1);
-                Console.WriteLine("Random number: " + randomNum);
+                Console.WriteLine("[DEV] Random number: " + randomNum);
                 while (answer != randomNum)
                 {
+                    if(betMode && bet == 0)
+                    {
+                        Console.WriteLine("You failed the bet");
+                        Main();
+                    }
                     Console.WriteLine("Successfully selected random number, try to guess it!");
-                    Console.Write("It's your ");
-                    Console.Write(tries + 1);
-                    Console.Write(" try" + Environment.NewLine);
+                    if(betMode)
+                        Console.WriteLine($"It's your {tries + 1} try and you have {bet} bets left before fail");
+                    else
+                        Console.WriteLine($"It's your {tries + 1} try");
                     Console.Write("Your guess: ");
                     int.TryParse(Console.ReadLine(), out answer);
                     tries++;
+                    bet--;
 
                     if(answer == randomNum)
                     {
@@ -172,6 +207,7 @@ static void randomFailMessage()
                 }
                 break;
             case 2:
+                Console.Clear();
                 if (!isScoreboardAvailable())
                 {
                     Console.WriteLine("Selected incorrect option");
@@ -180,6 +216,7 @@ static void randomFailMessage()
                 Console.Write("Select difficulty to see top scores:" + Environment.NewLine + "1) Easy" + Environment.NewLine + "2) Medium" + Environment.NewLine + "3) Hard" + Environment.NewLine + "Your choice: ");
                 int scoreboardDifficulty;
                 int.TryParse(Console.ReadLine(), out scoreboardDifficulty);
+                Console.Clear();
                 showScoreboard(scoreboardDifficulty);
                 break;
         }
