@@ -1,30 +1,41 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 class Program
 {
+static Language lang;
+static Settings settings;
     // Checks if scoreboard.txt exists
 static bool isScoreboardAvailable()
 {
     return File.Exists("scoreboard.txt");
 }
+static void LoadSettings()
+    {
+    if(!File.Exists("settings.json")){
+        settings = new Settings();
+        File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+    }
+    settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText("settings.json"));
+    }
 static void pause()
     {
-        Console.WriteLine("Press any key to continue...");
+        Console.WriteLine(lang.GetText("menu.pause"));
         Console.ReadKey();
     }
-static int startScreen() // method (Static) works only when called
+static string startScreen() // method (Static) works only when called
 {
     Console.Clear();
-    Console.WriteLine("Welcome to the 'Lucky Bet' game!");
-    Console.WriteLine("Please select option from the menu");
-    Console.WriteLine("1) Start new game");
+    Console.WriteLine(lang.GetText("menu.startscreen.startmess"));
+    Console.WriteLine(lang.GetText("menu.startscreen.selectoption"));
+    Console.WriteLine(lang.GetText("menu.startscreen.newgame"));
     if (isScoreboardAvailable())
     {
-        Console.WriteLine("2) Check scoreboard");
+        Console.WriteLine(lang.GetText("menu.startscreen.scoreboard"));
     }
-    int menuSelect;
-    Int32.TryParse(Console.ReadLine(), out menuSelect); //After succesfully converting user input value is assigned to menuSelect
+    Console.WriteLine(lang.GetText("menu.startscreen.settings"));
+    string menuSelect = Console.ReadLine();
     return menuSelect;
 }
 static string difficultySelect()
@@ -32,28 +43,28 @@ static string difficultySelect()
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Before you start select your difficulty level" + Environment.NewLine + "Available difficulties:");
-            Console.WriteLine(" 1) Easy - numbers from 1 to 50 ");
-            Console.WriteLine(" 2) Medium - numbers from 1 to 100 ");
-            Console.WriteLine(" 3) Hard - numbers from 1 to 250 ");
-            Console.WriteLine(" Or Q to quit the menu");
-            Console.Write("Your choice: ");
+            Console.WriteLine(lang.GetText("menu.difficultySelect.startmess") + Environment.NewLine + lang.GetText("menu.difficultySelect.available"));
+            Console.WriteLine(lang.GetText("menu.difficultySelect.easy"));
+            Console.WriteLine(lang.GetText("menu.difficultySelect.medium"));
+            Console.WriteLine(lang.GetText("menu.difficultySelect.hard"));
+            Console.WriteLine(lang.GetText("menu.difficultySelect.quit"));
+            Console.Write(lang.GetText("menu.difficultySelect.choice"));
             string diffSelect = Console.ReadLine();
             Console.Clear();
             switch (diffSelect)
             {
                 default:
                     Console.Clear();
-                    Console.WriteLine("Difficulty not available");
+                    Console.WriteLine(lang.GetText("error.difficultySelect"));
                     continue;
                 case "1":
-                    Console.WriteLine("Chosen easy difficulty");
+                    Console.WriteLine(lang.GetText("menu.difficultySelect.easy.confirm"));
                     return diffSelect;
                 case "2":
-                    Console.WriteLine("Chosen mid difficulty");
+                    Console.WriteLine(lang.GetText("menu.difficultySelect.medium.confirm"));
                     return diffSelect;
                 case "3":
-                    Console.WriteLine("Chosen hard difficulty");
+                    Console.WriteLine(lang.GetText("menu.difficultySelect.hard.confirm"));
                     return diffSelect;
                 case "q":
                 case "Q":
@@ -62,6 +73,67 @@ static string difficultySelect()
                     Main();
                     return null;
             }
+        }
+    }
+static void changeLanguage()
+    {
+        Console.WriteLine("[DEV] Chosen option to change language");
+        Console.WriteLine(lang.GetText("menu.settings.language.change"));
+        while (true)
+        {
+            string languageSwitch = Console.ReadLine();
+            switch (languageSwitch)
+            {
+                case "1":
+                    settings.language = "en";
+                    lang = new Language($"lang/{settings.language}.json");
+                    File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+                    return;
+                case "2":
+                    settings.language = "pl";
+                    lang = new Language($"lang/{settings.language}.json");
+                    File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+                    return;
+                default:
+                    Console.WriteLine(lang.GetText("error.startScreen.menu"));
+                    continue;
+            }
+        }
+    }
+static void betModeQuestion()
+    {
+        Console.WriteLine("[DEV] Chosen option to change bet mode behavior");
+        Console.WriteLine(lang.GetText("menu.settings.betmode.change"));
+        while (true)
+        {
+            string betModeSwitch = Console.ReadLine();
+            switch (betModeSwitch)
+            {
+                case "1":
+                    settings.askBet = true;
+                    File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+                    return;
+                case "2":
+                    settings.askBet = false;
+                    File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+                    return;
+                default:
+                    Console.WriteLine(lang.GetText("error.startScreen.menu"));
+                    continue;
+            }
+        }
+    }
+static void resetScoreboard()
+    {
+        Console.Write(lang.GetText("menu.setting.resetScoreboard.confirm"));
+        while (true)
+        {
+            var key = Console.ReadKey(true).Key;
+            if(key == ConsoleKey.Y)
+                File.Delete("scoreboard.txt");
+                return;
+            if(key == ConsoleKey.N)
+                return;
         }
     }
 class Scores // Template
@@ -87,11 +159,11 @@ static void showScoreboard(int selectedDifficulty)
 
     if(top5.Count == 0)
             {
-                Console.WriteLine("No results");
+                Console.WriteLine(lang.GetText("error.scoreboard.noResults"));
                 pause();
                 Main();
             }
-    Console.WriteLine($"=== TOP 5 ===");
+    Console.WriteLine($"=== Hall of Fame ===");
     for (int i = 0; i < top5.Count; i++)
     {
         Console.WriteLine($"{i + 1}. {top5[i].PlayerName} - {top5[i].Tries}");
@@ -102,13 +174,13 @@ static void showScoreboard(int selectedDifficulty)
 static void randomFailMessage()
     {
         List<string> randomFailMessageList = new List<string>{
-            "Oops!",
-            "Almost!",
-            "Wrong!",
-            "Yikes!",
-            "Nah-uhh!",
-            "Snap!",
-            "Ah man!"
+            lang.GetText("menu.randomFailMessage.message1"),
+            lang.GetText("menu.randomFailMessage.message2"),
+            lang.GetText("menu.randomFailMessage.message3"),
+            lang.GetText("menu.randomFailMessage.message4"),
+            lang.GetText("menu.randomFailMessage.message5"),
+            lang.GetText("menu.randomFailMessage.message6"),
+            lang.GetText("menu.randomFailMessage.message7")
         };
         Random rand = new Random();
         int randomFailMessage = rand.Next(0, randomFailMessageList.Count);
@@ -116,7 +188,7 @@ static void randomFailMessage()
     }
 static bool isBetModeOn()
     {
-        Console.WriteLine("Would you like to turn on a bet mode? If you chose YES you have to chose maximum number of available tries, if you pass that number you will fail (Y/N)");
+        Console.WriteLine(lang.GetText("menu.betmode.question"));
         while (true)
         {
             var key = Console.ReadKey(true).Key; // true hides key in console
@@ -129,19 +201,21 @@ static bool isBetModeOn()
     static void Main()
     {
         // Console.WriteLine("Hello, World!");
+        LoadSettings();
+        lang = new Language($"lang/{settings.language}.json");
         int maxNum = 0, answer = 0, tries = 0, bet = 0;
-        int menuSelect = startScreen();
+        string menuSelect = startScreen();
         // Console.WriteLine("You have chosen option: " + menuSelect);
         switch (menuSelect)
         {
             default:
-                Console.WriteLine("Selected incorrect option");
+                Console.WriteLine(lang.GetText("error.startScreen.menu"));
                 break;
-            case 1:
+            case "1":
                 string diffSelect = difficultySelect();
                 if(diffSelect == null)
                 {
-                    Console.WriteLine("Exiting game");
+                    Console.WriteLine(lang.GetText("menu.menuSelect.exit"));
                     break;
                 }
                 // Console.WriteLine("Selected difficulty level: " + diffSelect);
@@ -157,11 +231,15 @@ static bool isBetModeOn()
                 {
                     maxNum = 250;
                 }
-                bool betMode = isBetModeOn();
+                bool betMode = false;
+                if (settings.askBet)
+                {
+                    betMode = isBetModeOn();
+                }
                 if (betMode)
                 {
                     Console.WriteLine("[DEV] Bet mode is on");
-                    Console.WriteLine("Choose your maximum number of tries (from 1 to 10)");
+                    Console.WriteLine(lang.GetText("menu.betmode.maximumNumer"));
                     do
                     {
                         int.TryParse(Console.ReadLine(), out bet);
@@ -175,49 +253,81 @@ static bool isBetModeOn()
                 {
                     if(betMode && bet == 0)
                     {
-                        Console.WriteLine("You failed the bet");
+                        Console.WriteLine(lang.GetText("menu.betmode.fail"));
                         Main();
                     }
-                    Console.WriteLine("Successfully selected random number, try to guess it!");
+                    Console.WriteLine(lang.GetText("menu.guessing.selectedNumber"));
                     if(betMode)
-                        Console.WriteLine($"It's your {tries + 1} try and you have {bet} bets left before fail");
+                        Console.WriteLine(lang.GetText("menu.betmode.guessing.tries.mess1")+(tries+1)+lang.GetText("menu.betmode.guessing.tries.mess2")+bet+lang.GetText("menu.betmode.guessing.tries.mess3"));
                     else
-                        Console.WriteLine($"It's your {tries + 1} try");
-                    Console.Write("Your guess: ");
+                        Console.WriteLine(lang.GetText("menu.guessing.tries.mess1")+(tries + 1)+lang.GetText("menu.guessing.tries.mess2"));
+                    Console.Write(lang.GetText("menu.guessing.input"));
                     int.TryParse(Console.ReadLine(), out answer);
                     tries++;
                     bet--;
 
                     if(answer == randomNum)
                     {
-                        Console.WriteLine("Congratulations! You guessed right");
-                        Console.Write("You needed " + tries + " tries to guess the right number!" + Environment.NewLine + "Enter your name to save your score: ");
+                        Console.WriteLine(lang.GetText("menu.guessing.win"));
+                        Console.Write(lang.GetText("menu.guessing.win.info.mess1")+tries+lang.GetText("menu.guessing.win.info.mess2"));
                         string playerName = Console.ReadLine();
                         File.AppendAllText(Path.Combine(".", "scoreboard.txt"), playerName + ";" + tries + ";" + diffSelect + Environment.NewLine);
                     }
                     else if(answer < randomNum)
                     {
                         randomFailMessage();
-                        Console.WriteLine("Looks like your answer is smaller than a hidden number. Try again!");
+                        Console.WriteLine(lang.GetText("menu.guessing.error.smaller"));
                     }
                     else if(answer > randomNum){
                         randomFailMessage();
-                        Console.WriteLine("Looks like your answer is bigger than a hidden number. Try again!");
+                        Console.WriteLine(lang.GetText("menu.guessing.error.bigger"));
             }
                 }
                 break;
-            case 2:
+            case "2":
                 Console.Clear();
                 if (!isScoreboardAvailable())
                 {
-                    Console.WriteLine("Selected incorrect option");
+                    Console.WriteLine(lang.GetText("error.startScreen.menu"));
                     break;
                 }
-                Console.Write("Select difficulty to see top scores:" + Environment.NewLine + "1) Easy" + Environment.NewLine + "2) Medium" + Environment.NewLine + "3) Hard" + Environment.NewLine + "Your choice: ");
+                Console.Write(lang.GetText("menu.scoreboard.choice"));
                 int scoreboardDifficulty;
                 int.TryParse(Console.ReadLine(), out scoreboardDifficulty);
                 Console.Clear();
                 showScoreboard(scoreboardDifficulty);
+                break;
+            case "s":
+            case "S":
+                while(true){
+                    Console.Clear();
+                    Console.WriteLine("[DEV] Chosen settings");
+                    Console.WriteLine(lang.GetText("menu.settings.language")+settings.language);
+                    Console.WriteLine(lang.GetText("menu.settings.betmode")+settings.askBet);
+                    Console.WriteLine(lang.GetText("menu.settings.resetHoF"));
+                    Console.WriteLine(lang.GetText("menu.settings.exit"));
+                    string option = Console.ReadLine();
+                    switch (option)
+                        {
+                            case "1":
+                                changeLanguage();
+                                break;
+                            case "2":
+                                betModeQuestion();
+                                break;
+                            case "3":
+                                resetScoreboard();
+                                break;
+                            case "q":
+                            case "Q":
+                                Console.Clear();
+                                Main();
+                                return;
+                            default:
+                                Console.WriteLine(lang.GetText("error.startScreen.menu"));
+                                break;
+                        }
+                }
                 break;
         }
     }
