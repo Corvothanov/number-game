@@ -13,7 +13,7 @@
     "menu.difficultySelect.medium.confirm": "Wybrano średni poziom trudności",
     "menu.difficultySelect.hard": " 3) Trudny - liczby od 1 do 250",
     "menu.difficultySelect.hard.confirm": "Wybrano trudny poziom trudności",
-    "menu.difficultySelect.quit": " Lub Q by upuścić menu",
+    "menu.difficultySelect.exit": " Lub Q by upuścić menu",
     "menu.difficultySelect.choice": "Twój wybór: ",
     "menu.randomFailMessage.message1": "Ups!",
     "menu.randomFailMessage.message2": "Prawo!",

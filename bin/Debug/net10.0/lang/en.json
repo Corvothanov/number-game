@@ -13,7 +13,7 @@
     "menu.difficultySelect.medium.confirm": "Chosen medium difficulty",
     "menu.difficultySelect.hard": " 3) Hard - numbers from 1 to 250",
     "menu.difficultySelect.hard.confirm": "Chosen hard difficulty",
-    "menu.difficultySelect.quit": " Or Q to quit the menu",
+    "menu.difficultySelect.exit": " Or Q to quit the menu",
     "menu.difficultySelect.choice": "Your choice: ",
     "menu.randomFailMessage.message1": "Oops!",
     "menu.randomFailMessage.message2": "Almost!",
