@@ -60,6 +60,77 @@ class GameManager
         ui.displayMessage("menu.settings.resetHoF");
         ui.displayMessage("menu.settings.exit");
 
+        // Changing settings
+        string choice = ui.readString("menu.difficultySelect.choice");
+        switch (choice)
+        {
+            case "1":
+                {
+                    int langChoice = ui.readInt("menu.settings.language.change");
+                    switch(langChoice)
+                    {
+                        case 1:
+                            settings.language = "en";
+                            settings.save();
+                            settings.load();
+                            break;
+                        case 2:
+                            settings.language = "pl";
+                            settings.save();
+                            settings.load();
+                            break;
+                        default:
+                            ui.displayMessage("error.startScreen.menu");
+                            return;
+                    }
+                    break;
+                }
+            case "2":
+                {
+                    int betChoice = ui.readInt("menu.settings.betmode.change");
+                    switch (betChoice)
+                    {
+                        case 1:
+                            settings.askBet = true;
+                            settings.save();
+                            settings.load();
+                            break;
+                        case 2:
+                            settings.askBet = false;
+                            settings.save();
+                            settings.load();
+                            break;
+                        default:
+                            ui.displayMessage("error.startScreen.menu");
+                            return;
+                    }
+                    break;
+                }
+                case "3":
+                {
+                    string confirmClearance = ui.readString("menu.setting.resetScoreboard.confirm");
+                    switch (confirmClearance)
+                    {
+                        case "y":
+                        case "Y":
+                            {
+                                hallOfFame.clearRecords();
+                                hallOfFame.load();
+                                break;
+                            }
+                        default:
+                            {
+                                return;
+                            }
+                    }
+                    break;
+                }
+                case "q":
+                case "Q":
+                {
+                    return;
+                }
+        }
     }
     private void startNewGame()
     {

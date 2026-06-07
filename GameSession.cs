@@ -9,7 +9,6 @@ abstract class GameSession
     protected DateTime startTime { get; set; }
     protected int guess { get; set; }
     protected UI ui { get; set; }
-    protected bool isBetMode { get; set; }
 
     public GameSession(int difficulty, UI ui)
     {
@@ -52,7 +51,7 @@ abstract class GameSession
         }
         if (guess < targetNumber)
         {
-            ui.displayMessage("menu.guessing.error.smaller");
+            ui.getRandomFeedback(true);
             ui.displayMessage("menu.guessing.tries.mess1");
             Console.Write(currentAttempt+1);
             ui.displayMessage("menu.guessing.tries.mess2");
@@ -60,7 +59,7 @@ abstract class GameSession
         }
         if (guess > targetNumber)
         {
-            ui.displayMessage("menu.guessing.error.bigger");
+            ui.getRandomFeedback(false);
             ui.displayMessage("menu.guessing.tries.mess1");
             Console.Write(currentAttempt+1);
             ui.displayMessage("menu.guessing.tries.mess2");

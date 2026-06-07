@@ -13,7 +13,6 @@ class StandardGame : GameSession
         playerRecord = new PlayerRecord();
         hallOfFame = new HallOfFame();
         hallOfFame.load();
-
         Console.WriteLine($"[DEBUG] Target number: {targetNumber}");
         ui.displayMessage("menu.guessing.selectedNumber");
         ui.displayMessage($"menu.guessing.tries.mess1");
