@@ -22,12 +22,13 @@ class HallOfFame
     {
         return records.Where(r => r.difficultyLevel == difficulty) // filters results by difficulty
         .OrderBy(r => r.attempts) // sorts results by number of tries
+        .ThenBy(r => r.timeInSeconds)
         .Take(5) // limits results
         .ToList(); // changes table into list (vector in C++)
     }
     public bool hasAnyRecords()
     {
-        return records.Count > 0;
+        return records.Any();
     }
     public void save()
     {

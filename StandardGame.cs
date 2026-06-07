@@ -22,12 +22,14 @@ class StandardGame : GameSession
         {
             if (checkGuess(ui.readInt("menu.guessing.input")))
             {
+                TimeSpan gameTime = DateTime.Now - startTime;
                 ui.displayMessage("menu.guessing.win");
                 ui.displayMessage("menu.guessing.win.info.mess1");
                 Console.Write(currentAttempt);
                 playerRecord.playerName = ui.readString("menu.guessing.win.info.mess2");
                 playerRecord.attempts = currentAttempt;
                 playerRecord.difficultyLevel = difficulty;
+                playerRecord.timeInSeconds = (int)Math.Round(gameTime.TotalSeconds);
                 playerRecord.isNewGamePlus = false;
                 hallOfFame.addRecord(playerRecord);
                 break;

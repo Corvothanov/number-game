@@ -47,7 +47,7 @@ class UI
     {
         for (int i = 0; i < records.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {records[i].playerName} - {records[i].attempts}");
+                Console.WriteLine($"{i + 1}. {records[i].playerName} - {records[i].attempts} - {records[i].timeInSeconds}s");
             }
     Pause();
     }
