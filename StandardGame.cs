@@ -3,7 +3,6 @@ using System;
 class StandardGame : GameSession
 {
     // private UI ui;
-    private GameSession gameSession;
     private Settings settings;
     private PlayerRecord playerRecord;
     private HallOfFame hallOfFame;

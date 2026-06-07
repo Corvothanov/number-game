@@ -5,7 +5,6 @@ class UI
 {
     Settings settings = new Settings();
     private Language lang;
-    private UI ui;
     private string[] randomFailMessage =
     {
         "menu.randomFailMessage.message1",

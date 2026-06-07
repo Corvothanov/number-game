@@ -5,12 +5,13 @@ class GameManager
     private Settings settings = new Settings();
     private HallOfFame hallOfFame = new HallOfFame();
     private UI ui = new UI();
-
+    int diff, maxAttempts = 9999;
     private void showWelcomeScreen()
     {
         ui.displayMessage("menu.startscreen.startmess");
         ui.displayMessage("menu.startscreen.selectoption");
         ui.displayMessage("menu.startscreen.newgame");
+        ui.displayMessage("menu.startscreen.newgamePlus");
         if (hallOfFame.hasAnyRecords())
         {
             ui.displayMessage("menu.startscreen.scoreboard");
@@ -29,9 +30,19 @@ class GameManager
             case "1":
                 {
                     startNewGame();
+                    GameSession gameSession = new StandardGame(diff, maxAttempts, ui);
+                    gameSession.Play();
                     break;
                 }
             case "2":
+                {
+                    startNewGame();
+                    settings.askBet = false;
+                    GameSession gameSession = new NewGamePlus(diff, ui);
+                    gameSession.Play();
+                    break;
+                }
+            case "3":
                 {
                     if (hallOfFame.hasAnyRecords())
                     {
@@ -135,7 +146,6 @@ class GameManager
     private void startNewGame()
     {
         // Displays difficulty selection menu
-        int diff, maxAttempts = 9999;
         ui.displayMessage("menu.difficultySelect.startmess");
         ui.displayMessage("menu.difficultySelect.available");
         ui.displayMessage("menu.difficultySelect.easy");
@@ -197,8 +207,6 @@ class GameManager
                     }
             }
         }
-        GameSession gameSession = new StandardGame(diff, maxAttempts, ui);
-        gameSession.Play();
     }
     public void run()
     {
