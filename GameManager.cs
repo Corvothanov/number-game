@@ -34,7 +34,10 @@ class GameManager
             case "2":
                 {
                     if (hallOfFame.hasAnyRecords())
-                        ui.showTop5(hallOfFame.getTop5(1));
+                    {
+                        int diff = ui.readInt("menu.scoreboard.choice");
+                        ui.showTop5(hallOfFame.getTop5(diff));
+                    }
                     break;
                 }
             case "s":
@@ -61,6 +64,7 @@ class GameManager
     private void startNewGame()
     {
         // Displays difficulty selection menu
+        int diff, maxAttempts = 9999;
         ui.displayMessage("menu.difficultySelect.startmess");
         ui.displayMessage("menu.difficultySelect.available");
         ui.displayMessage("menu.difficultySelect.easy");
@@ -71,38 +75,65 @@ class GameManager
         switch (choice)
         {
             case "1":
-                ui.displayMessage("menu.difficultySelect.easy.confirm");
                 {
-                    GameSession gameSession = new StandardGame(1, 10, ui);
-                    gameSession.Play();
+                    diff = 1;
+                    break;
                 }
-                break;
             case "2":
-                ui.displayMessage("menu.difficultySelect.medium.confirm");
                 {
-                    GameSession gameSession = new StandardGame(2, 8, ui);
-                    gameSession.Play();
+                    diff = 2;
+                    break;
                 }
-                break;
             case "3":
-                ui.displayMessage("menu.difficultySelect.hard.confirm");
                 {
-                    GameSession gameSession = new StandardGame(3, 5, ui);
-                    gameSession.Play();
+                    diff = 3;
+                    break;
                 }
-                break;
             case "q":
             case "Q":
-                return;
+                {
+                    return;
+                }
             default:
-                ui.displayMessage("menu.settings.exit");
-                break;
+                {
+                    ui.displayMessage("error.startScreen.menu");
+                    return;
+                }
         }
+        if(settings.askBet)
+        {
+            switch (ui.readString("menu.betmode.question"))
+            {
+                default:
+                    {
+                        ui.displayMessage("error.startScreen.menu");
+                        return;
+                    }
+                case "y":
+                case "Y":
+                    {
+                        int input = 0;
+                        while(input < 1 || input > 10){
+                            input = ui.readInt("menu.betmode.maximumNumer");
+                        }
+                        maxAttempts = input;
+                        break;
+                    }
+                case "n":
+                case "N":
+                    {
+                        break;
+                    }
+            }
+        }
+        GameSession gameSession = new StandardGame(diff, maxAttempts, ui);
+        gameSession.Play();
     }
     public void run()
     {
         Console.WriteLine("[DEBUG] Running GameMager");
         settings.load();
+        hallOfFame.load();
         showWelcomeScreen();
     }
     static void Main()

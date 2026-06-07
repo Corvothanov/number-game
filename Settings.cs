@@ -11,14 +11,16 @@ class Settings
 
     public void save()
     {
-        lang = new Language($"lang/{settings.language}.json");
-        File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+        lang = new Language($"lang/{this.language}.json");
+        File.WriteAllText("settings.json", JsonSerializer.Serialize(this));
     }
     public void load(){
     if(!File.Exists("settings.json")){
         settings = new Settings();
-        File.WriteAllText("settings.json", JsonSerializer.Serialize(settings));
+        File.WriteAllText("settings.json", JsonSerializer.Serialize(this));
     }
     settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText("settings.json"));
+    language = settings.language;
+    askBet = settings.askBet;
     }
 }

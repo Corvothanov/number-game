@@ -9,6 +9,7 @@ abstract class GameSession
     protected DateTime startTime { get; set; }
     protected int guess { get; set; }
     protected UI ui { get; set; }
+    protected bool isBetMode { get; set; }
 
     public GameSession(int difficulty, UI ui)
     {

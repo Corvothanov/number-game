@@ -22,7 +22,7 @@
     "menu.randomFailMessage.message5": "Nie-e!",
     "menu.randomFailMessage.message6": "Ojoj!",
     "menu.randomFailMessage.message7": "Siwy dym!",
-    "menu.betmode.question": "Czy chcesz włączyć tryb zakłady? Jeśli tak, wybierz liczbę maksimalnie dostępnych prób, jeśli przekroczysz tą liczbę to przegrasz (Y/N)",
+    "menu.betmode.question": "Czy chcesz włączyć tryb zakładu? Jeśli tak, wybierz liczbę maksimalnie dostępnych prób, jeśli przekroczysz tą liczbę to przegrasz (Y/N)",
     "menu.betmode.maximumNumer": "Wybierz maksymalną liczbę prób (od 1 do 10)",
     "menu.betmode.guessing.tries.mess1": "To Twoja ",
     "menu.betmode.guessing.tries.mess2": " próba, zostało Ci ",

@@ -2,40 +2,21 @@ using System;
 
 class StandardGame : GameSession
 {
-    private UI ui;
+    // private UI ui;
     private GameSession gameSession;
     private Settings settings;
+    private PlayerRecord playerRecord;
+    private HallOfFame hallOfFame;
     public StandardGame(int diff, int maxAttempts, UI ui) : base(diff, ui)
     {
         settings = new Settings();
-        if(settings.askBet)
-        {
-            switch (ui.readString("menu.betmode.question"))
-            {
-                default:
-                    {
-                        ui.displayMessage("error.startScreen.menu");
-                        return;
-                    }
-                case "y":
-                case "Y":
-                    {
-                        while (ui.readInt("menu.betmode.maximumNumer") < 1 || ui.readInt("menu.betmode.maximumNumer") > 10)
-                        {
-                            maxAttempts = ui.readInt("menu.betmode.maximumNumer");
-                        }
-                        break;
-                    }
-                case "n":
-                case "N":
-                    {
-                        break;
-                    }
-            }
-        }
+        playerRecord = new PlayerRecord();
+        hallOfFame = new HallOfFame();
+        hallOfFame.load();
+
         Console.WriteLine($"[DEBUG] Target number: {targetNumber}");
         ui.displayMessage("menu.guessing.selectedNumber");
-        ui.displayMessage("menu.guessing.tries.mess1");
+        ui.displayMessage($"menu.guessing.tries.mess1");
         Console.Write(currentAttempt+1);
         ui.displayMessage("menu.guessing.tries.mess2");
         while(currentAttempt < maxAttempts)
@@ -45,7 +26,11 @@ class StandardGame : GameSession
                 ui.displayMessage("menu.guessing.win");
                 ui.displayMessage("menu.guessing.win.info.mess1");
                 Console.Write(currentAttempt);
-                // playerName = ui.readString("menu.guessing.win.info.mess2");
+                playerRecord.playerName = ui.readString("menu.guessing.win.info.mess2");
+                playerRecord.attempts = currentAttempt;
+                playerRecord.difficultyLevel = difficulty;
+                playerRecord.isNewGamePlus = false;
+                hallOfFame.addRecord(playerRecord);
                 break;
             }
         }

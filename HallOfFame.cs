@@ -10,10 +10,12 @@ class HallOfFame
     public void addRecord(PlayerRecord record)
     {
         records.Add(record);
+        save();
     }
     public void clearRecords()
     {
         records.Clear();
+        save();
     }
     // Array's fixed; List's dynamic 
     public List<PlayerRecord> getTop5(int difficulty)
@@ -35,6 +37,7 @@ class HallOfFame
     {
         if (!File.Exists("scoreboard.json"))
         {
+            Console.WriteLine("[DEBUG] no scoreboard file found");
             records = new List<PlayerRecord>();
             return;
         }
