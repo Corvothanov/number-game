@@ -50,6 +50,7 @@
     "menu.settings.resetHoF": "3) Reset Hall of Fame",
     "menu.setting.resetScoreboard.confirm": "Are you sure you want to reset all scores from Hall Of Fame? (Y/N)",
     "menu.settings.exit": "Q) Exit settings",
+    "menu.halloffame.title": "--- Hall of Fame ---",
     "error.difficultySelect": "Difficulty not available",
     "error.startScreen.menu": "Selected incorrect option",
     "error.scoreboard.noResults": "No results"

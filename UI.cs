@@ -46,7 +46,13 @@ class UI
     {
         for (int i = 0; i < records.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {records[i].playerName} - {records[i].attempts} - {records[i].timeInSeconds}s");
+                Console.Write($"{i + 1}. {records[i].playerName}");
+                if(records[i].isNewGamePlus){
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("+");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                Console.Write($" - {records[i].attempts} - {records[i].timeInSeconds}s" + Environment.NewLine);
             }
     Pause();
     }

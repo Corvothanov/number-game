@@ -47,6 +47,7 @@ class GameManager
                     if (hallOfFame.hasAnyRecords())
                     {
                         int diff = ui.readInt("menu.scoreboard.choice");
+                        ui.displayMessage("menu.halloffame.title");
                         ui.showTop5(hallOfFame.getTop5(diff));
                     }
                     break;
@@ -218,6 +219,9 @@ class GameManager
     static void Main()
     {
         GameManager gameManager = new GameManager();
-        gameManager.run();
+        while(true)
+        {
+            gameManager.run();
+        }
     }
 }

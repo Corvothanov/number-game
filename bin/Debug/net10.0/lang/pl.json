@@ -50,6 +50,7 @@
     "menu.settings.resetHoF": "3) Zresetuj tablicę wyników",
     "menu.setting.resetScoreboard.confirm": "Czy na pewno chcesz usunąć wszystkie wpisy z Galerii Sławy? (Y/N)",
     "menu.settings.exit": "Q) Opuść opcje",
+    "menu.halloffame.title": "--- Hall of Fame ---",
     "error.difficultySelect": "Poziom trudności nie dostępny",
     "error.startScreen.menu": "Wybrano niepoprawną opcję",
     "error.scoreboard.noResults": "Brak wyników"
