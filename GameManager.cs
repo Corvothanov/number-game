@@ -79,12 +79,12 @@ class GameManager
                         case 1:
                             settings.language = "en";
                             settings.save();
-                            settings.load();
+                            ui.ReloadLanguage();
                             break;
                         case 2:
                             settings.language = "pl";
                             settings.save();
-                            settings.load();
+                            ui.ReloadLanguage();
                             break;
                         default:
                             ui.displayMessage("error.startScreen.menu");

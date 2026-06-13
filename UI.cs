@@ -18,7 +18,24 @@ class UI
     public UI()
     {
         settings.load();
-        lang = new Language($"lang/{settings.language}.json");
+        switch (settings.language)
+        {
+            case "pl":
+                {
+                    lang = new Polish();
+                    break;
+                }
+            case "en":
+                {
+                    lang = new English();
+                    break;
+                }
+            default:
+                {
+                    lang = new English();
+                    break;
+                }
+        }
     }
     public void displayMessage(string messageKey)
     {
@@ -75,5 +92,20 @@ class UI
     {
         Console.WriteLine(lang.GetText("menu.pause"));
         Console.ReadKey();
+    }
+    public void ReloadLanguage()
+    {
+        settings.load();
+
+        switch (settings.language)
+        {
+            case "pl":
+                lang = new Polish();
+                break;
+
+            default:
+                lang = new English();
+                break;
+        }
     }
 }

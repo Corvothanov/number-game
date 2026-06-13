@@ -11,7 +11,19 @@ class Settings
 
     public void save()
     {
-        lang = new Language($"lang/{this.language}.json");
+        switch (settings.language)
+        {
+            case "en":
+                {
+                    lang = new English();
+                    break;
+                }
+            case "pl":
+                {
+                    lang = new Polish();
+                    break;
+                }
+        }
         File.WriteAllText("settings.json", JsonSerializer.Serialize(this));
     }
     public void load(){

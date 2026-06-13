@@ -1,12 +1,13 @@
-using System.Text.Json;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
-public class Language
+public abstract class Language
 {
-    private Dictionary<string, string> text;
+    protected Dictionary<string, string> text;
 
-    public Language(string path)
+    protected Language(string path)
     {
         string jsonLocation = File.ReadAllText(path);
         text = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonLocation);
@@ -15,12 +16,26 @@ public class Language
             text = new Dictionary<string, string>();
         }
     }
-    public string GetText(string translation)
+    public virtual string GetText(string translation)
     {
         if (text.ContainsKey(translation))
         {
             return text[translation];
         }
         return "["+ translation + "]";
+    }
+}
+public class Polish : Language
+{
+    public Polish() : base("lang/pl.json")
+    {
+
+    }
+}
+public class English : Language
+{
+    public English() : base("lang/en.json")
+    {
+
     }
 }
